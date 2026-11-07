@@ -1,0 +1,16 @@
+# environment / build
+.venv/
+__pycache__/
+dist/
+*.ipk
+
+# private: pairing key, Developer Mode key + token, saved settings, logs
+data/
+
+# personal pictures and their derived launcher background (not ours to publish)
+image*.png
+tvremote/tv/bg.jpg
+contrib/bg_dune.jpg
+
+# local backups of older launcher versions
+contrib/*.bak

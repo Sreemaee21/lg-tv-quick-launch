@@ -1,0 +1,9 @@
+[project]
+name = "tvremote"
+version = "0.1.0"
+description = "Phone remote and fast launcher for LG webOS TVs"
+requires-python = ">=3.12"
+dependencies = [
+    "aiohttp>=3.14.5",
+    "aiowebostv>=1.0.0",
+]

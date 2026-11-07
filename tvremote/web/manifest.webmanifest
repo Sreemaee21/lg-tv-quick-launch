@@ -1,0 +1,2 @@
+{"name":"TV Remote","short_name":"Remote","start_url":"/","display":"standalone","background_color":"#0e1014","theme_color":"#0e1014",
+ "icons":[{"src":"/static/icon-180.png","sizes":"180x180","type":"image/png"},{"src":"/static/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}]}

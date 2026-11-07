@@ -1,0 +1,17 @@
+{
+  "id": "com.tvupgrade.quicklaunch",
+  "version": "1.0.0",
+  "vendor": "TV Upgrade",
+  "type": "web",
+  "main": "index.html",
+  "title": "Quick Launch",
+  "icon": "icon.png",
+  "largeIcon": "largeIcon.png",
+  "bgColor": "#0b0d11",
+  "resolution": "1920x1080",
+  "disableBackHistoryAPI": false,
+  "keepAlive": true,
+  "noSplashOnLaunch": true,
+  "spinnerOnLaunch": false,
+  "splashBackground": "bg.jpg"
+}

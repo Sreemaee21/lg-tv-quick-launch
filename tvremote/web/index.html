@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0e1014">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>TV Remote</title>
+<link rel="manifest" href="/static/manifest.webmanifest">
+<link rel="icon" href="/static/icon.svg">
+<link rel="apple-touch-icon" href="/static/icon-180.png">
+<meta name="apple-mobile-web-app-title" content="TV Remote">
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 3v9M6.3 6.3a8 8 0 1 0 11.4 0"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 11 9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-lg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-mute" viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="m22 9-6 6M16 9l6 6"/></symbol>
+  <symbol id="i-vol" viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></symbol>
+  <symbol id="i-rew" viewBox="0 0 24 24"><path d="m11 19-9-7 9-7zM22 19l-9-7 9-7z"/></symbol>
+  <symbol id="i-ff" viewBox="0 0 24 24"><path d="m13 19 9-7-9-7zM2 19l9-7-9-7z"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M7 4h3v16H7zM14 4h3v16h-3z"/></symbol>
+  <symbol id="i-remote" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="3"/><circle cx="12" cy="8" r="2"/><path d="M10 14h.01M14 14h.01M10 17h.01M14 17h.01"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+  <symbol id="i-kbd" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+</svg>
+
+<header class="top">
+  <div class="status" id="status"><span class="dot"></span><span id="statusText">Connecting…</span></div>
+  <button class="icon-btn power" data-act="power" aria-label="Power"><svg><use href="#i-power"/></svg></button>
+</header>
+
+<main>
+  <!-- REMOTE -->
+  <section class="view active" id="v-remote">
+    <div class="favs" id="favStrip"></div>
+
+    <div class="mode-toggle" role="tablist">
+      <button class="seg active" data-mode="dpad">Buttons</button>
+      <button class="seg" data-mode="swipe">Swipe</button>
+      <button class="seg" data-mode="pad">Touchpad</button>
+    </div>
+
+    <div class="pad-area">
+      <div class="dpad" id="dpad">
+        <button class="dp up" data-btn="UP" data-repeat aria-label="Up"><svg><use href="#i-up"/></svg></button>
+        <button class="dp left" data-btn="LEFT" data-repeat aria-label="Left"><svg><use href="#i-left"/></svg></button>
+        <button class="dp ok" data-btn="ENTER" aria-label="OK">OK</button>
+        <button class="dp right" data-btn="RIGHT" data-repeat aria-label="Right"><svg><use href="#i-right"/></svg></button>
+        <button class="dp down" data-btn="DOWN" data-repeat aria-label="Down"><svg><use href="#i-down"/></svg></button>
+      </div>
+      <div class="surface hidden" id="swipe"><span>Swipe to move · tap for OK<br>hold to keep moving</span></div>
+      <div class="surface hidden" id="touchpad"><span>Drag to move the pointer · tap to click<br>two fingers to scroll</span></div>
+    </div>
+
+    <div class="row nav">
+      <button class="key" data-btn="BACK"><svg><use href="#i-back"/></svg><small>Back</small></button>
+      <button class="key accent" data-act="home"><svg><use href="#i-bolt"/></svg><small id="homeLabel">Home</small></button>
+      <button class="key" data-act="original"><svg><use href="#i-lg"/></svg><small>LG menu</small></button>
+      <button class="key" data-btn="MENU"><svg><use href="#i-gear"/></svg><small>Settings</small></button>
+    </div>
+
+    <div class="row ctl">
+      <div class="rocker">
+        <button class="rk" data-btn="VOLUMEDOWN" data-repeat aria-label="Volume down"><svg><use href="#i-minus"/></svg></button>
+        <button class="rk mid" data-act="mute" aria-label="Mute"><svg id="muteIcon"><use href="#i-vol"/></svg><b id="volNum">–</b></button>
+        <button class="rk" data-btn="VOLUMEUP" data-repeat aria-label="Volume up"><svg><use href="#i-plus"/></svg></button>
+      </div>
+      <div class="rocker media">
+        <button class="rk" data-btn="REWIND" aria-label="Rewind"><svg><use href="#i-rew"/></svg></button>
+        <button class="rk" data-act="playpause" aria-label="Play or pause"><svg id="ppIcon"><use href="#i-play"/></svg></button>
+        <button class="rk" data-btn="FASTFORWARD" aria-label="Fast forward"><svg><use href="#i-ff"/></svg></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- APPS -->
+  <section class="view" id="v-apps">
+    <h2>Inputs</h2>
+    <div class="chips" id="inputs"></div>
+    <h2>Apps <span class="hint">tap to open · ☆ to pin to your launcher</span></h2>
+    <input class="search" id="appSearch" type="search" placeholder="Search apps" autocomplete="off">
+    <div class="grid" id="appGrid"></div>
+  </section>
+
+  <!-- TYPE -->
+  <section class="view" id="v-type">
+    <h2>Type on the TV</h2>
+    <p class="hint">Select a search box on the TV and a typing bar pops up on its own. You can also type here at any time.</p>
+    <textarea id="typeBox" rows="2" placeholder="Start typing…" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+    <div class="row">
+      <button class="wide" data-act="clearType">Clear</button>
+      <button class="wide accent" data-act="enter">Enter / Search</button>
+    </div>
+    <h2>Number pad</h2>
+    <div class="numpad">
+      <button data-btn="1">1</button><button data-btn="2">2</button><button data-btn="3">3</button>
+      <button data-btn="4">4</button><button data-btn="5">5</button><button data-btn="6">6</button>
+      <button data-btn="7">7</button><button data-btn="8">8</button><button data-btn="9">9</button>
+      <button data-btn="LIST">List</button><button data-btn="0">0</button><button data-btn="BACK">Back</button>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="view" id="v-more">
+    <div class="card">
+      <div class="card-row">
+        <div>
+          <b>Fast UI</b>
+          <p class="hint" id="fastHint">The Home button opens the fast launcher.</p>
+        </div>
+        <label class="switch"><input type="checkbox" id="fastToggle"><span></span></label>
+      </div>
+      <div class="card-row" style="margin-top:14px">
+        <div>
+          <b>Open launcher at power-on</b>
+          <p class="hint">Shows Quick Launch as soon as the TV turns on.</p>
+        </div>
+        <label class="switch"><input type="checkbox" id="powerToggle"><span></span></label>
+      </div>
+      <button class="wide" data-act="original"><svg><use href="#i-lg"/></svg> Show original LG home</button>
+      <p class="hint">Turning Fast UI off puts everything back to the stock LG behaviour. Nothing on the TV is changed or removed.</p>
+      <p class="hint" id="launcherState"></p>
+    </div>
+
+    <h2>Channels &amp; extras</h2>
+    <div class="row">
+      <button class="wide" data-btn="CHANNELUP">CH +</button>
+      <button class="wide" data-btn="CHANNELDOWN">CH −</button>
+      <button class="wide" data-btn="GUIDE">Guide</button>
+    </div>
+    <div class="row">
+      <button class="wide" data-btn="INFO">Info</button>
+      <button class="wide" data-btn="QMENU">Quick menu</button>
+      <button class="wide" data-btn="EXIT">Exit</button>
+    </div>
+    <div class="row colors">
+      <button data-btn="RED" style="--c:#e5484d" aria-label="Red"></button>
+      <button data-btn="GREEN" style="--c:#30a46c" aria-label="Green"></button>
+      <button data-btn="YELLOW" style="--c:#f5d90a" aria-label="Yellow"></button>
+      <button data-btn="BLUE" style="--c:#3e63dd" aria-label="Blue"></button>
+    </div>
+    <p class="hint">Tip: on your phone, use "Add to Home screen" so this opens like an app.</p>
+  </section>
+</main>
+
+<nav class="tabs">
+  <button class="tab active" data-view="v-remote"><svg><use href="#i-remote"/></svg>Remote</button>
+  <button class="tab" data-view="v-apps"><svg><use href="#i-grid"/></svg>Apps</button>
+  <button class="tab" data-view="v-type"><svg><use href="#i-kbd"/></svg>Type</button>
+  <button class="tab" data-view="v-more"><svg><use href="#i-gear"/></svg>Settings</button>
+</nav>
+
+<div class="kbdbar" id="kbdBar" hidden>
+  <div class="kbdbar-head"><b>The TV wants text</b><button class="link" data-act="kbdClose">Hide</button></div>
+  <input id="kbdInput" type="text" placeholder="Tap here to type" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="/static/app.js"></script>
+</body>
+</html>

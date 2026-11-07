@@ -1,0 +1,106 @@
+/* Quick Launch. webOS 4 (Chromium 53): no blur, no animated shadows;
+   key presses only change transforms, opacity and a few classes. */
+@font-face{font-family:Doto;src:url(fonts/Doto-800.woff2) format("woff2");font-weight:800;font-display:block}
+@font-face{font-family:Grotesk;src:url(fonts/SpaceGrotesk-300.woff2) format("woff2");font-weight:300;font-display:block}
+@font-face{font-family:Grotesk;src:url(fonts/SpaceGrotesk-500.woff2) format("woff2");font-weight:500;font-display:block}
+@font-face{font-family:Grotesk;src:url(fonts/SpaceGrotesk-700.woff2) format("woff2");font-weight:700;font-display:block}
+*{box-sizing:border-box}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;color:#f4f4f2;background:#000 url(bg.jpg) no-repeat 0 0;
+  font-family:Grotesk,"LG Smart UI",sans-serif;font-weight:500}
+svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hidden{display:none!important}
+.dot{display:inline-block;width:11px;height:11px;border-radius:6px;background:#f4f4f2;vertical-align:middle;position:relative;top:-2px;margin-right:14px}
+.dot.red{background:#d71921}
+
+#scrimL{position:absolute;left:0;top:0;width:1400px;height:1080px;
+  background:linear-gradient(90deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.75) 30%,rgba(0,0,0,.4) 65%,rgba(0,0,0,0) 100%)}
+#scrimR{position:absolute;right:0;top:0;width:700px;height:1080px;
+  background:linear-gradient(270deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.5) 55%,rgba(0,0,0,0) 100%)}
+#scrimB{position:absolute;left:0;right:0;bottom:0;height:260px;background:linear-gradient(0deg,rgba(0,0,0,.7),rgba(0,0,0,0))}
+
+/* ---------- header ---------- */
+#brand{position:absolute;left:120px;top:66px;font-size:19px;letter-spacing:6px;color:#bdbdb8}
+#clockBox{position:absolute;right:120px;top:44px;text-align:right}
+#clock{font-family:Doto,monospace;font-weight:800;font-size:70px;line-height:1;letter-spacing:2px;color:#d9d9d4}
+#date{margin-top:8px;font-size:17px;letter-spacing:5px;color:#9e9e98;font-weight:300}
+
+/* ---------- roll (left) ---------- */
+#wheel{position:absolute;left:0;top:0;width:620px;height:1080px}
+#roll{position:absolute;left:0;top:0}
+.wi{position:absolute;left:120px;top:0;width:72px;height:72px;border-radius:18px;overflow:hidden;opacity:0;
+  -webkit-transform-origin:0 50%;transform-origin:0 50%;
+  -webkit-transition:-webkit-transform .2s ease-out,opacity .2s;transition:transform .2s ease-out,opacity .2s}
+.wi img{width:72px;height:72px;display:block}
+.wi.jump{-webkit-transition:none;transition:none}
+.wi.d0{opacity:1}.wi.d1{opacity:.6}.wi.d2{opacity:.38}.wi.d3{opacity:.2}
+.chev{position:absolute;left:138px;width:40px;height:40px;color:#e9e9e4}
+.chev svg{width:40px;height:40px}
+.chev.up{top:418px}.chev.down{top:622px}
+#rollName{position:absolute;left:262px;top:500px;width:340px;font-weight:700;font-size:40px;letter-spacing:-1px;line-height:1.05;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#rollName small{display:block;font-weight:300;font-size:17px;letter-spacing:4px;color:#a7a7a2;margin-top:8px}
+body.notRoll #rollName{opacity:.45}
+body.notRoll .wi.d0{opacity:.7}
+
+/* ---------- continue (middle) ---------- */
+#mid{position:absolute;left:660px;top:230px;width:760px}
+.mh{font-size:19px;letter-spacing:6px;color:#cfcfca}
+.mh.small{margin-top:64px;font-size:16px;color:#8f8f89;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.14)}
+.mh.small:before{content:"";display:inline-block;width:0}
+#cont{margin-top:22px}
+#contTitle{font-weight:700;font-size:96px;letter-spacing:-3px;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#contSub{margin-top:14px;font-weight:300;font-size:24px;color:#c9c9c4;letter-spacing:1px}
+#contBtn{display:inline-block;margin-top:28px;padding:14px 36px 14px 26px;border-radius:40px;border:2px solid rgba(255,255,255,.4);
+  font-size:20px;letter-spacing:5px;color:#f4f4f2}
+#contBtn svg{width:22px;height:22px;fill:currentColor;stroke:none;vertical-align:middle;margin-right:12px;position:relative;top:-2px}
+#cont.focus #contBtn{background:#f4f4f2;color:#000;border-color:#f4f4f2}
+#recent{margin-top:12px}
+.rc{position:relative;height:64px;border-radius:14px;border:2px solid transparent;opacity:.75}
+.rc .ic{position:absolute;left:10px;top:9px;width:42px;height:42px;border-radius:11px;overflow:hidden;background:#1b1b1b;
+  font-family:Doto,monospace;font-weight:800;font-size:17px;line-height:42px;text-align:center}
+.rc .ic img{width:42px;height:42px}
+.rc .nm{position:absolute;left:70px;top:16px;font-size:23px}
+.rc .tm{position:absolute;right:20px;top:20px;font-size:16px;letter-spacing:3px;color:#9a9a94}
+.rc.focus{opacity:1;background:rgba(255,255,255,.1);border-color:#f4f4f2}
+#recentEmpty{margin-top:16px;font-weight:300;font-size:20px;color:#8f8f89}
+
+/* ---------- side panel (right) ---------- */
+#side{position:absolute;left:1470px;top:210px;width:340px}
+.sh{font-size:17px;letter-spacing:6px;color:#9a9a94;margin:0 0 14px 14px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.16)}
+#sideInputs{margin-bottom:34px}
+.si{position:relative;height:78px;margin-bottom:6px;border-radius:18px;border:2px solid transparent;opacity:.72}
+.si .tb{position:absolute;left:14px;top:11px;width:52px;height:52px;border-radius:14px;background:#1b1b1b;border:2px solid rgba(255,255,255,.26);
+  font-family:Doto,monospace;font-weight:800;font-size:21px;line-height:48px;text-align:center;color:#fff}
+.si .tb svg{width:28px;height:28px;margin:10px;color:#f4f4f2}
+.si .nm{position:absolute;left:86px;top:12px;font-size:25px;font-weight:500;white-space:nowrap}
+.si .sb{position:absolute;left:86px;top:44px;font-size:15px;letter-spacing:3px;color:#9a9a94}
+.si.focus{opacity:1;background:rgba(255,255,255,.1);border-color:#f4f4f2}
+.si.focus:after{content:"";position:absolute;right:18px;top:33px;width:10px;height:10px;border-radius:5px;background:#d71921}
+
+/* ---------- hints & toast ---------- */
+#hints{position:absolute;left:120px;bottom:54px;font-size:16px;letter-spacing:4px;color:#8f8f89;white-space:nowrap}
+#hints b{color:#d9d9d4;font-weight:500;margin-right:10px}
+#hints span{margin-right:44px}
+#toast{position:absolute;left:50%;bottom:110px;width:640px;margin-left:-320px;text-align:center;padding:16px 0;border-radius:40px;
+  background:#f4f4f2;color:#000;font-size:22px;letter-spacing:2px;opacity:0;-webkit-transition:opacity .2s;transition:opacity .2s}
+#toast.show{opacity:1}
+
+/* ---------- search ---------- */
+#lib{position:absolute;left:0;top:0;width:1920px;height:1080px;background:#050505}
+#libHead{position:absolute;left:120px;top:72px;font-size:19px;letter-spacing:6px;color:#bdbdb8}
+#libHint{margin-left:40px;font-size:15px;letter-spacing:4px;color:#77776f}
+#libBox{position:absolute;left:120px;right:120px;top:120px;height:110px;border-bottom:2px solid rgba(255,255,255,.2)}
+#libBox.focus{border-bottom-color:#d71921}
+#q{width:100%;height:100px;border:0;outline:0;background:transparent;color:#fff;font-family:Grotesk,sans-serif;font-weight:300;font-size:64px;letter-spacing:-1px}
+#libWrap{position:absolute;left:0;right:0;top:280px;bottom:0;overflow:hidden}
+#libGrid{position:absolute;left:120px;top:10px;width:1700px;-webkit-transition:-webkit-transform .2s ease-out;transition:transform .2s ease-out}
+.tile{position:relative;float:left;width:214px;height:196px;margin:0 22px 22px 0;border-radius:20px;background:#121212;border:3px solid transparent;
+  text-align:center;-webkit-transition:-webkit-transform .12s;transition:transform .12s}
+.tile .ic{width:88px;height:88px;margin:24px auto 0;border-radius:20px;overflow:hidden;background:#1d1d1d}
+.tile .ic img{width:88px;height:88px}
+.tile .ic svg{width:52px;height:52px;margin:18px;color:#eee}
+.tile .ic .port{font-family:Doto,monospace;font-weight:800;font-size:26px;line-height:88px;color:#fff}
+.tile .nm{margin:16px 12px 0;font-size:20px;color:#cfcfca;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile.pinned:after{content:"";position:absolute;right:14px;top:14px;width:12px;height:12px;border-radius:6px;background:#d71921}
+.tile.focus{border-color:#fff;-webkit-transform:scale(1.06);transform:scale(1.06)}
+.tile.focus .nm{color:#fff}

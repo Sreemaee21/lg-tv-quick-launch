@@ -1,0 +1,3 @@
+Doto (c) The Doto Project Authors, and Space Grotesk (c) The Space Grotesk Project Authors.
+Both are licensed under the SIL Open Font License 1.1: https://openfontlicense.org
+Static Latin subsets from Google Fonts, bundled so the TV launcher works offline.

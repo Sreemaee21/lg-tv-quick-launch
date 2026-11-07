@@ -1,0 +1,90 @@
+<!doctype html>
+<!-- Paints the launcher background (original art: twin suns over a desert world).
+     Rendered by contrib/make_background.py with headless Chrome. -->
+<html><body style="margin:0;background:#000">
+<canvas id="c" width="1920" height="1080"></canvas>
+<pre id="out"></pre>
+<script>
+var W = 1920, H = 1080, ctx = document.getElementById("c").getContext("2d");
+var seed = 7;
+function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+
+// sky
+var g = ctx.createLinearGradient(0, 0, 0, H);
+g.addColorStop(0, "#03050c"); g.addColorStop(0.45, "#080b22"); g.addColorStop(0.68, "#1a1233");
+g.addColorStop(0.80, "#4a2233"); g.addColorStop(0.88, "#7a3a2c"); g.addColorStop(1, "#2a1410");
+ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+
+// nebula: soft clouds, upper right
+function cloud(x, y, r, col, a) {
+  var rg = ctx.createRadialGradient(x, y, 0, x, y, r);
+  rg.addColorStop(0, "rgba(" + col + "," + a + ")"); rg.addColorStop(1, "rgba(" + col + ",0)");
+  ctx.fillStyle = rg; ctx.fillRect(x - r, y - r, 2 * r, 2 * r);
+}
+for (var i = 0; i < 26; i++) {
+  var t = i / 26;
+  cloud(1100 + t * 760 + rnd() * 120, 120 + Math.sin(t * 5) * 90 + rnd() * 120, 120 + rnd() * 220,
+        rnd() > 0.5 ? "120,70,200" : "40,120,190", 0.05 + rnd() * 0.05);
+}
+cloud(380, 200, 420, "60,40,140", 0.06);
+
+// stars (fewer toward the horizon)
+for (var s = 0; s < 1700; s++) {
+  var x = rnd() * W, y = Math.pow(rnd(), 1.5) * H * 0.78;
+  var b = Math.pow(rnd(), 3), r = 0.4 + b * 1.4;
+  var tint = rnd(), col = tint > 0.85 ? "255,220,180" : tint > 0.7 ? "180,210,255" : "255,255,255";
+  ctx.fillStyle = "rgba(" + col + "," + (0.25 + b * 0.75) * (1 - y / (H * 0.85)) + ")";
+  ctx.beginPath(); ctx.arc(x, y, r, 0, 6.283); ctx.fill();
+  if (b > 0.75) cloud(x, y, 9 + b * 8, col, 0.18);
+}
+
+// distant ringed moon, top left
+(function () {
+  var x = 300, y = 170, r = 46;
+  var mg = ctx.createRadialGradient(x - 18, y - 16, 4, x, y, r);
+  mg.addColorStop(0, "#8a8fb0"); mg.addColorStop(0.7, "#3b3f5c"); mg.addColorStop(1, "#1b1d2c");
+  ctx.fillStyle = mg; ctx.beginPath(); ctx.arc(x, y, r, 0, 6.283); ctx.fill();
+  ctx.strokeStyle = "rgba(170,180,220,0.35)"; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.ellipse(x, y, r * 2.1, r * 0.42, -0.35, 0, 6.283); ctx.stroke();
+})();
+
+// twin suns, low over the horizon on the right
+function sun(x, y, r, core, glow) {
+  cloud(x, y, r * 9, glow, 0.20);
+  cloud(x, y, r * 3.2, glow, 0.45);
+  var sg = ctx.createRadialGradient(x, y, 0, x, y, r);
+  sg.addColorStop(0, "#fffbe8"); sg.addColorStop(0.6, core); sg.addColorStop(1, "rgba(255,180,90,0)");
+  ctx.fillStyle = sg; ctx.beginPath(); ctx.arc(x, y, r * 1.1, 0, 6.283); ctx.fill();
+}
+sun(1480, 812, 34, "#ffd27a", "255,150,70");
+sun(1625, 858, 22, "#ffb36a", "255,110,60");
+
+// dunes: layered silhouettes with a warm rim from the suns
+function dune(base, amp, freq, phase, top, bottom, rim) {
+  var pts = [];
+  for (var x = 0; x <= W; x += 8) {
+    var y = base + Math.sin(x * freq + phase) * amp + Math.sin(x * freq * 2.7 + phase * 1.7) * amp * 0.35;
+    pts.push([x, y]);
+  }
+  var dg = ctx.createLinearGradient(0, base - amp, 0, H);
+  dg.addColorStop(0, top); dg.addColorStop(1, bottom);
+  ctx.fillStyle = dg; ctx.beginPath(); ctx.moveTo(0, H);
+  pts.forEach(function (p) { ctx.lineTo(p[0], p[1]); });
+  ctx.lineTo(W, H); ctx.fill();
+  ctx.strokeStyle = rim; ctx.lineWidth = 2; ctx.beginPath();
+  pts.forEach(function (p, i) { i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); });
+  ctx.stroke();
+}
+dune(880, 22, 0.0021, 0.6, "#3a1d22", "#160b0e", "rgba(255,150,90,0.30)");
+dune(940, 30, 0.0016, 2.1, "#25131a", "#0d0709", "rgba(255,140,80,0.22)");
+dune(1010, 26, 0.0024, 4.0, "#140a0f", "#070406", "rgba(255,130,80,0.14)");
+
+// gentle vignette + overall dim so the UI on top stays legible
+var v = ctx.createRadialGradient(W * 0.55, H * 0.5, H * 0.35, W * 0.55, H * 0.5, H * 1.05);
+v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, "rgba(0,0,0,0.55)");
+ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
+ctx.fillStyle = "rgba(4,6,14,0.18)"; ctx.fillRect(0, 0, W, H);
+
+document.getElementById("out").textContent = document.getElementById("c").toDataURL("image/jpeg", 0.86);
+</script>
+</body></html>

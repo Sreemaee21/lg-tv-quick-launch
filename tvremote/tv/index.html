@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Quick Launch</title>
+<link rel="stylesheet" href="tv.css">
+</head>
+<body>
+<div id="scrimL"></div>
+<div id="scrimR"></div>
+<div id="scrimB"></div>
+
+<header>
+  <div id="brand"><i class="dot red"></i>QUICK LAUNCH</div>
+  <div id="clockBox"><div id="clock">--:--</div><div id="date"></div></div>
+</header>
+
+<section id="wheel">
+  <div class="chev up"><svg viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></svg></div>
+  <div class="chev down"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div>
+  <div id="rollName"></div>
+  <div id="roll"></div>
+</section>
+
+<section id="mid">
+  <div class="mh"><i class="dot red"></i>CONTINUE</div>
+  <div id="cont">
+    <div id="contTitle"></div>
+    <div id="contSub"></div>
+    <div id="contBtn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>RESUME</div>
+  </div>
+  <div class="mh small" id="recentHead">RECENT</div>
+  <div id="recent"></div>
+</section>
+
+<aside id="side">
+  <div class="sh">INPUTS</div>
+  <div id="sideInputs"></div>
+  <div class="sh">SYSTEM</div>
+  <div id="sideSystem"></div>
+</aside>
+
+<footer id="hints"></footer>
+<div id="toast"></div>
+
+<section id="lib" class="hidden">
+  <div id="libHead"><i class="dot red"></i>SEARCH<span id="libHint">HOLD OK TO ADD OR REMOVE FROM THE MAIN MENU</span></div>
+  <div id="libBox"><input id="q" type="text" placeholder="Type an app or input" autocomplete="off"></div>
+  <div id="libWrap"><div id="libGrid"></div></div>
+</section>
+
+<script src="config.js"></script>
+<script src="baked.js"></script>
+<script src="tv.js"></script>
+</body>
+</html>

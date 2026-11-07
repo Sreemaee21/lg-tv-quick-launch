@@ -1,0 +1,16 @@
+# Autostart the remote server when you log in.
+#   cp contrib/tvremote.service ~/.config/systemd/user/
+#   systemctl --user daemon-reload && systemctl --user enable --now tvremote
+[Unit]
+Description=LG TV phone remote
+After=network-online.target
+
+[Service]
+# edit both paths if you cloned somewhere else
+WorkingDirectory=%h/Documents/TV_upgrade
+ExecStart=%h/Documents/TV_upgrade/.venv/bin/python -m tvremote
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=default.target
