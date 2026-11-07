@@ -37,6 +37,7 @@
   <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
   <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></symbol>
   <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
   <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
 </svg>
 
@@ -102,7 +103,10 @@
   <section class="view" id="v-type">
     <h2>Type on the TV</h2>
     <p class="hint">Select a search box on the TV and a typing bar pops up on its own. You can also type here at any time.</p>
-    <textarea id="typeBox" rows="2" placeholder="Start typing…" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+    <div class="field-row">
+      <textarea id="typeBox" rows="2" placeholder="Start typing…" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+      <button class="mic" data-mic="typeBox" aria-label="Speak"><svg><use href="#i-mic"/></svg></button>
+    </div>
     <div class="row">
       <button class="wide" data-act="clearType">Clear</button>
       <button class="wide accent" data-act="enter">Enter / Search</button>
@@ -168,7 +172,10 @@
 
 <div class="kbdbar" id="kbdBar" hidden>
   <div class="kbdbar-head"><b>The TV wants text</b><button class="link" data-act="kbdClose">Hide</button></div>
-  <input id="kbdInput" type="text" placeholder="Tap here to type" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+  <div class="field-row">
+    <input id="kbdInput" type="text" placeholder="Type, or tap the mic and speak" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+    <button class="mic" data-mic="kbdInput" aria-label="Speak"><svg><use href="#i-mic"/></svg></button>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>

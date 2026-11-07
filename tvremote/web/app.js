@@ -369,6 +369,49 @@
   }
   bindTyping($("#typeBox"));
 
+  // ---------- voice input ----------
+  // Browsers only allow the mic on secure pages: https, or this phone's own
+  // http://127.0.0.1 (the phone running the server). Elsewhere, fall back to
+  // the keyboard's own mic key (Gboard / iPhone dictation), which works anywhere.
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let rec = null, recField = null;
+  function stopVoice() {
+    if (rec) { try { rec.stop(); } catch (_) {} }
+  }
+  function startVoice(field, btn) {
+    if (rec) { stopVoice(); return; }
+    if (!SR || !window.isSecureContext) {
+      field.focus();
+      toast(SR ? "Tap the mic key on your keyboard (this address can't use the browser mic)"
+               : "Tap the mic key on your keyboard to speak");
+      return;
+    }
+    rec = new SR();
+    recField = field;
+    rec.lang = navigator.language || "en-IN";
+    rec.interimResults = true;
+    rec.continuous = false;
+    const base = field.value ? field.value.replace(/\s*$/, " ") : "";
+    btn.classList.add("listening");
+    buzz(15);
+    rec.onresult = (e) => {
+      let text = "";
+      for (let i = 0; i < e.results.length; i++) text += e.results[i][0].transcript;
+      field.value = base + text;
+      field.dispatchEvent(new Event("input"));     // sends only the difference to the TV
+    };
+    rec.onerror = (e) => {
+      if (e.error === "not-allowed" || e.error === "service-not-allowed") toast("Allow the microphone for this page to use voice");
+      else if (e.error !== "aborted" && e.error !== "no-speech") toast("Voice input stopped: " + e.error);
+    };
+    rec.onend = () => {
+      btn.classList.remove("listening");
+      rec = null; recField = null;
+    };
+    try { rec.start(); } catch (_) { btn.classList.remove("listening"); rec = null; }
+  }
+  $$(".mic").forEach((btn) => btn.addEventListener("click", () => startVoice($("#" + btn.dataset.mic), btn)));
+
   const bar = $("#kbdBar"), kin = $("#kbdInput");
   bindTyping(kin, () => closeKbdBar());
   function openKbdBar() {
@@ -378,7 +421,7 @@
     // Browsers only open the keyboard from a tap. Try anyway; it works on some.
     try { kin.focus({ preventScroll: true }); } catch (_) {}
   }
-  function closeKbdBar() { bar.hidden = true; kin.blur(); }
+  function closeKbdBar() { if (recField === kin) stopVoice(); bar.hidden = true; kin.blur(); }
 
   // ---------- toast ----------
   let toastT;

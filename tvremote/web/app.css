@@ -138,3 +138,11 @@ textarea{width:100%;font:inherit;font-size:18px;padding:14px;border-radius:14px;
 .toast.show{opacity:1;transform:translateX(-50%)}
 
 @media (max-height:640px){:root{--tap:50px}.favs{min-height:58px}.fav img,.fav .ph{width:42px;height:42px}}
+
+/* voice input */
+.field-row{display:flex;gap:10px;align-items:stretch}
+.field-row textarea,.field-row input{flex:1;min-width:0}
+.mic{flex:none;width:56px;border-radius:14px;display:grid;place-items:center;background:var(--panel2);color:var(--text)}
+.mic svg{width:26px;height:26px}
+.mic.listening{background:var(--bad);border-color:var(--bad);color:#fff;animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 8px #e5484d33}}
