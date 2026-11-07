@@ -14,8 +14,11 @@
   var SVG = {
     search: '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
     settings: '<svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>',
-    lg: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8"/></svg>'
+    lg: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8"/></svg>',
+    web: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>'
   };
+  var BROWSER = "com.webos.app.browser";
+  function googleUrl(q) { return "https://www.google.com/search?q=" + encodeURIComponent(q); }
   var DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   var MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 
@@ -40,7 +43,12 @@
     return server ? server + "/icon/" + encodeURIComponent(a.id) : null;
   }
   var byId = {};
-  apps.forEach(function (a) { byId[a.id] = { id: a.id, title: a.title, kind: "app", icon: iconUrl(a) }; });
+  apps.forEach(function (a) {
+    byId[a.id] = { id: a.id, title: a.id === BROWSER ? "Web Browser" : a.title, kind: "app", icon: iconUrl(a) };
+  });
+  (baked.bookmarks || []).forEach(function (b) {
+    byId[b.id] = { id: b.id, title: b.title, kind: "web", url: b.url, icon: b.icon || null, svg: b.icon ? null : SVG.web };
+  });
   var inputItems = inputs.map(function (i) {
     var port = (i.id || "").replace("_", " ");
     var it = { id: i.app, title: i.label, kind: "input", port: port, short: port.replace("HDMI ", "H").replace("AV ", "AV").replace("COMP ", "C") };
@@ -49,6 +57,7 @@
   });
   var SIDE = inputItems.filter(function (i) { return MAIN_INPUTS.test(i.port); }).concat([
     { id: "@search", title: "Search", kind: "search", svg: SVG.search, sub: "ALL APPS" },
+    { id: "@google", title: "Google", kind: "search", svg: SVG.web, sub: "SEARCH THE WEB" },
     { id: "@settings", launch: "com.palm.app.settings", title: "Settings", kind: "settings", svg: SVG.settings, sub: "LG SETTINGS" },
     { id: "@lg", title: "LG home", kind: "lg", svg: SVG.lg, sub: "ORIGINAL UI" }]);
   var everything = Object.keys(byId).map(function (k) { return byId[k]; })
@@ -86,6 +95,7 @@
   function activate(item) {
     if (!item) return;
     if (item.kind === "search") return openLib();
+    if (item.kind === "web") return openUrl(item.url);
     if (item.kind === "lg") {
       serverAction({ a: "original" });
       return setTimeout(function () { try { window.close(); } catch (e) {} }, 250);
@@ -96,6 +106,14 @@
       save("ql-recent", recentLocal);
     }
     if (!luna("luna://com.webos.applicationManager/launch", { id: id })) serverAction({ a: "launch", id: id });
+  }
+
+  function openUrl(url) {
+    recentLocal = [{ id: BROWSER, at: now() }].concat(recentLocal.filter(function (r) { return r.id !== BROWSER; })).slice(0, 8);
+    save("ql-recent", recentLocal);
+    if (!luna("luna://com.webos.applicationManager/launch", { id: BROWSER, params: { target: url } })) {
+      serverAction({ a: "open", url: url });
+    }
   }
 
   var toastTimer = null;
@@ -109,7 +127,10 @@
   function inRoll(id) { return rollIds.indexOf(id) >= 0; }
   function setPinned(id, on) {
     var item = byId[id];
-    if (!item || item.kind !== "app") { toast("Inputs live in the right-hand panel"); return; }
+    if (!item || item.kind !== "app") {
+      toast(item && item.kind === "web" ? "Links and searches stay in Search" : "Inputs live in the right-hand panel");
+      return;
+    }
     if (on && !inRoll(id)) rollIds.push(id);
     if (!on) rollIds = rollIds.filter(function (x) { return x !== id; });
     save("ql-roll", rollIds);
@@ -251,6 +272,8 @@
   function renderLib() {
     var q = $("q").value.trim().toLowerCase(), grid = $("libGrid"), html = "";
     libItems = everything.filter(function (it) { return !q || it.title.toLowerCase().indexOf(q) >= 0; });
+    var raw = $("q").value.trim();
+    if (raw) libItems.unshift({ id: "@g", title: "Google \u201c" + raw + "\u201d", kind: "web", url: googleUrl(raw), svg: SVG.web });
     for (var i = 0; i < libItems.length; i++) {
       var it = libItems[i];
       var ic = it.kind === "input" ? '<div class="port">' + esc(it.short) + "</div>"
@@ -325,7 +348,7 @@
       else handled = false;
     } else if (zone === "libq") {
       if (k === K.D) focusTile();
-      else if (k === K.OK && libItems.length === 1) activate(libItems[0]);
+      else if (k === K.OK && $("q").value.trim()) openUrl(googleUrl($("q").value.trim()));
       else handled = false;
     } else if (zone === "lib") {
       if (k === K.L && si % COLS) si--;

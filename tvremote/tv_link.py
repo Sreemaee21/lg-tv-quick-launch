@@ -309,6 +309,8 @@ class TvLink:
         out = []
         for r in self.cfg.data.get("recent", []):
             title = labels.get(r["id"]) or (apps.get(r["id"]) or {}).get("title")
+            if r["id"] == "com.webos.app.browser":
+                title = "Web Browser"   # bookmarks share this id and can steal its title
             if title:
                 out.append({**r, "title": title})
         return out
@@ -377,7 +379,8 @@ class TvLink:
         if st:
             for app in st.apps.values():
                 apps.append(
-                    {"id": app["id"], "title": app.get("title", app["id"]),
+                    {"id": app["id"],
+                     "title": "Web Browser" if app["id"] == "com.webos.app.browser" else app.get("title", app["id"]),
                      "bg": app.get("bgColor") or app.get("iconColor") or ""}
                 )
             apps.sort(key=lambda a: a["title"].lower())
@@ -492,6 +495,11 @@ class TvLink:
             await self.home(server_url, force_original=True)
         elif a == "fastui":
             await self.open_fast_ui(server_url)
+        elif a == "open":
+            url = str(msg.get("url", ""))
+            if not url.startswith(("http://", "https://")):
+                raise ValueError("only http(s) links can be opened")
+            await self._need().request("system.launcher/open", {"target": url})
         elif a == "set_launch_on_power":
             self.cfg["launch_on_power"] = bool(msg["on"])
             await self._broadcast()

@@ -91,11 +91,34 @@ def snapshot_tv(cfg: Config) -> tuple[dict, dict[str, bytes]]:
                     except (aiohttp.ClientError, TimeoutError):
                         pass
                 apps.append(entry)
+            # browser bookmarks pinned to LG's home bar share the browser's app id,
+            # so read them from the raw launch-point list
+            bookmarks = []
+            lps = (await c.request("com.webos.applicationManager/listLaunchPoints")).get("launchPoints", [])
+            for lp in lps:
+                url = (lp.get("params") or {}).get("target")
+                if lp.get("id") != "com.webos.app.browser" or not url:
+                    continue
+                bm = {"id": "@bm:" + str(lp.get("launchPointId")), "title": lp.get("title", url)[:60], "url": url}
+                icon_url = lp.get("largeIcon") or lp.get("icon")
+                if icon_url:
+                    try:
+                        async with session.get(icon_url, ssl=False, timeout=aiohttp.ClientTimeout(total=5)) as r:
+                            if r.status == 200:
+                                name = f"icons/bm{len(bookmarks)}.png"
+                                icons[name] = await r.read()
+                                bm["icon"] = name
+                    except (aiohttp.ClientError, TimeoutError):
+                        pass
+                bookmarks.append(bm)
+            for a in apps:
+                if a["id"] == "com.webos.app.browser":
+                    a["title"] = "Web Browser"
             inputs = [{"id": x.get("id"), "app": x.get("appId"), "label": x.get("label") or x.get("id"),
                        "connected": x.get("connected", False)} for x in c.tv_state.inputs.values()]
             await c.disconnect()
         favs = [{"id": f} for f in cfg["favorites"]]
-        return {"apps": apps, "inputs": inputs, "favorites": favs}, icons
+        return {"apps": apps, "inputs": inputs, "favorites": favs, "bookmarks": bookmarks}, icons
 
     return asyncio.run(run())
 

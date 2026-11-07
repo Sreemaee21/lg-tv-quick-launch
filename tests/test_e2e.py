@@ -121,6 +121,12 @@ async def main() -> None:
                 check("icon proxied from TV", r.status == 200 and r.content_type == "image/png")
             async with s.post(SRV + "/api/action", json={"a": "launch", "id": "amazon"}) as r:
                 check("launcher HTTP action works", (await r.json())["ok"])
+            async with s.post(SRV + "/api/action", json={"a": "open", "url": "https://www.google.com/search?q=tv"}) as r:
+                check("web link opens in the TV browser", (await r.json())["ok"])
+            async with s.post(SRV + "/api/action", json={"a": "open", "url": "file:///etc/passwd"}) as r:
+                check("non-web links refused", r.status == 400)
+            async with s.post(SRV + "/api/action", json={"a": "launch", "id": "amazon"}) as r:
+                pass
             await asyncio.sleep(0.5)
             async with s.get(SRV + "/api/launcher") as r:
                 rec = (await r.json()).get("recent", [])
